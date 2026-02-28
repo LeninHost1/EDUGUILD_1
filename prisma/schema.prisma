@@ -1,0 +1,37 @@
+// Prisma schema for EDUGUILD MVP
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  college      String
+  department   String?
+  academicYear String
+  createdAt    DateTime @default(now())
+
+  resources Resource[]
+}
+
+model Resource {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  externalLink String
+  college      String
+  department   String
+  academicYear String
+  createdById  String
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [createdById], references: [id])
+}
